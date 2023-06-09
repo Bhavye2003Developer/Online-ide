@@ -1,15 +1,15 @@
-FROM ubuntu
+FROM python:3.9-slim-buster
 
 WORKDIR /usr/share/ide 
 # if not there, created
 
-RUN apt-get -y update && apt-get -y upgrade
+COPY requirements.txt .
 
-RUN apt-get install -y python3 && apt-get install -y g++ && apt-get install -y python3-pip && pip install django
-
-RUN apt update
-
-RUN apt-get install default-jdk -y
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    g++ \
+    default-jdk \
+    && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ide .
 
