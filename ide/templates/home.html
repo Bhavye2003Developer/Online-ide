@@ -33,7 +33,26 @@
             data-darkreader-inline-bgcolor=""
           ></textarea>
           <br />
-          <input type="text" id="customInput" name="customInput" placeholder="Enter custom input"><br>
+          {% comment %} <input
+            type="text"
+            id="customInput"
+            name="customInput"
+            placeholder="Enter custom input"
+          /><br /> {% endcomment %}
+          <textarea
+            name="customInput"
+            id="customInput"
+            placeholder="Enter custom input"
+            cols="30"
+            rows="0"
+            style="
+              background: transparent;
+              --darkreader-inline-bgimage: initial;
+              --darkreader-inline-bgcolor: transparent;
+              height: 423px;
+            "
+            data-darkreader-inline-bgcolor=""
+          ></textarea><br />
           <label for="python"> Python3</label>
           <input
             type="checkbox"
@@ -46,7 +65,12 @@
           <input type="checkbox" id="cpp" name="cpp" value="cpp" /><br />
 
           <label for="javaCode">Java</label>
-          <input type="checkbox" id="javaCode" name="javaCode" value="javaCode" /><br />
+          <input
+            type="checkbox"
+            id="javaCode"
+            name="javaCode"
+            value="javaCode"
+          /><br />
 
           <button type="submit" class="btn btn-success">Run code</button>
         </form>

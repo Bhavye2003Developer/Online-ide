@@ -11,7 +11,8 @@ import os
 def home(request):
     if request.method == "POST":
         code = request.POST["writecode"]
-        customInput = "\n".join(request.POST["customInput"].split())
+        customInput = request.POST["customInput"]
+        print(f"The customeInput is : {customInput}")
         with open("static/userCodes/input.txt", "w") as file:
             file.write(customInput)
         # print(code)
@@ -33,6 +34,7 @@ def home(request):
 
             with open("static/userCodes/input.txt", "r") as file:
                 input_data = file.read().strip()
+                print(f"The input data is : {input_data} and type is {type(input_data)}")
 
             p = subprocess.Popen(
                 ["python3", "static/userCodes/code.py"],
@@ -114,7 +116,7 @@ def home(request):
                 os.chdir(path)
 
         print(output)
-        clean()
+        # clean()
         return render(request, "home.html", context={"output": output})
 
     return render(request, "home.html")
