@@ -1,6 +1,1 @@
-x = int(input())
-arr = []
-for i in range(x):
-      m = input()
-      arr.append(m)
-print(arr)
+print("Bhavye is great")

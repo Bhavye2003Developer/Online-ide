@@ -1,102 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Online IDE</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
-      crossorigin="anonymous"
-    />
 
-    <!-- Add the Monaco Editor's CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.26.1/min/vs/editor/editor.main.min.css">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Online IDE</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
 
-<!-- Add the Monaco Editor's JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.26.1/min/vs/loader.js"></script>
+  <!-- Add the Monaco Editor's CSS -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.26.1/min/vs/editor/editor.main.min.css">
 
-  </head>
-  <body>
-    <center style="margin-top: 20px">
+  <!-- Add your custom CSS here if needed -->
+  <style>
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #f9f9f9;
+      border: 1px solid #e5e5e5;
+      border-radius: 5px;
+      padding: 20px;
+    }
+
+    .heading {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .code-editor {
+      height: 300px;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .btn-container button {
+      margin-right: 10px;
+    }
+
+    .output-container {
+      margin-top: 30px;
+      border: 1px solid #e5e5e5;
+      border-radius: 5px;
+      padding: 20px;
+    }
+
+    .output-container h2 {
+      margin-bottom: 10px;
+    }
+
+    .output {
+      white-space: pre-wrap;
+    }
+
+    .language-selection {
+      display: flex;
+      align-items: center;
+    }
+
+    .language-selection label {
+      margin-right: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="heading">
       <h2>Online IDE</h2>
       <h3>Please write your code here</h3>
+    </div>
+    <form action="{% url 'home' %}" method="post">
+      {% csrf_token %}
+      <!-- Add the Monaco Editor container -->
+      <div id="editor" class="code-editor"></div>
       <br />
-      <div class="container">
-        <form action="{% url 'home' %}" method="post">
-          {% csrf_token %}
-          <textarea
-            name="writecode"
-            id="writecode"
-            cols="70"
-            rows="6"
-            style="
-              background: transparent;
-              --darkreader-inline-bgimage: initial;
-              --darkreader-inline-bgcolor: transparent;
-              height: 423px;
-            "
-            data-darkreader-inline-bgcolor=""
-          ></textarea>
-          <br />
-          {% comment %} <input
-            type="text"
-            id="customInput"
-            name="customInput"
-            placeholder="Enter custom input"
-          /><br /> {% endcomment %}
-          <textarea
-            name="customInput"
-            id="customInput"
-            placeholder="Enter custom input"
-            cols="30"
-            rows="0"
-            style="
-              background: transparent;
-              --darkreader-inline-bgimage: initial;
-              --darkreader-inline-bgcolor: transparent;
-              height: 423px;
-            "
-            data-darkreader-inline-bgcolor=""
-          ></textarea><br />
-          <label for="python"> Python3</label>
-          <input
-            type="checkbox"
-            id="python"
-            name="python"
-            value="python"
-          /><br />
-
-          <label for="cpp">C++</label>
-          <input type="checkbox" id="cpp" name="cpp" value="cpp" /><br />
-
-          <label for="javaCode">Java</label>
-          <input
-            type="checkbox"
-            id="javaCode"
-            name="javaCode"
-            value="javaCode"
-          /><br />
-
-          <button type="submit" class="btn btn-success">Run code</button>
-        </form>
+      <!-- Hidden textarea to store the code input -->
+      <textarea name="writecode" id="hiddenWriteCode" style="display: none;"></textarea>
+      <!-- Custom Input -->
+      <textarea name="customInput" id="customInput" placeholder="Enter custom input" class="form-control"
+        rows="3"></textarea>
+      <br />
+      <!-- Language Selection -->
+      <div class="language-selection">
+        <label for="python"> Python3</label>
+        <input type="checkbox" id="python" name="python" value="python" /><br>
+        <label for="cpp">C++</label>
+        <input type="checkbox" id="cpp" name="cpp" value="cpp" /><br>
+        <label for="javaCode">Java</label>
+        <input type="checkbox" id="javaCode" name="javaCode" value="javaCode" />
       </div>
-      {% if output|length > 0 %}
-      <br /><br />
-      <div
-        class="container"
-        style="text-align: left; margin-left: 27%; width: 700px"
-      >
-        <h2>Output</h2>
-        <h4>{{output}}</h4>
+      <div class="btn-container">
+        <button type="submit" class="btn btn-success">Run code</button>
       </div>
-      {% endif %}
-    </center>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    </form>
+
+    {% if output|length > 0 %}
+    <div class="output-container">
+      <h2>Output</h2>
+      <pre class="output">{{ output }}</pre>
+    </div>
+    {% endif %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+    crossorigin="anonymous"></script>
+
+  <!-- Add the Monaco Editor's JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.26.1/min/vs/loader.js"></script>
+  <script>
+    // Monaco Editor Configuration
+    require.config({
+      paths: {
+        'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.26.1/min/vs'
+      }
+    });
+
+    // Load Monaco Editor
+    require(['vs/editor/editor.main'], function () {
+      var editor = monaco.editor.create(document.getElementById('editor'), {
+        value: [
+          '# Write your code here...',
+          'def main():',
+          '    print("Hello, World!")'
+        ].join('\n'),
+        language: 'python',
+        theme: 'vs-dark',
+        wordWrap: 'on'
+      });
+
+      // Set the editor content to the hidden textarea when form is submitted
+      document.querySelector('form').addEventListener('submit', function () {
+        var hiddenWriteCode = document.getElementById('hiddenWriteCode');
+        hiddenWriteCode.value = editor.getValue();
+      });
+    });
+  </script>
+</body>
+
 </html>
